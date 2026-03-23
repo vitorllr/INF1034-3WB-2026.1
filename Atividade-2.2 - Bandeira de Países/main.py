@@ -167,10 +167,78 @@ turtle.clear()
 
 #Bandeira Bulgária - 12
 
-colors = ["red","white","blue"]
+colors = ["white","green","red"]
 desenha_bandeira_simples_horizontal(colors,largura_faixa_horizontal,altura_faixa_horizontal,'Bulgária')
 sleep(1)
 turtle.clear()
+
+#Bandeira Estônia - 12
+
+colors = ["blue","black","white"]
+desenha_bandeira_simples_horizontal(colors,largura_faixa_horizontal,altura_faixa_horizontal,'Estônia')
+sleep(1)
+turtle.clear()
+
+#Bandeira Hungria - 13
+
+colors = ["red","white","green"]
+desenha_bandeira_simples_horizontal(colors,largura_faixa_horizontal,altura_faixa_horizontal,'Hungria')
+sleep(1)
+turtle.clear()
+
+#Bandeira Iêmen - 14
+
+colors = ["red","white","black"]
+desenha_bandeira_simples_horizontal(colors,largura_faixa_horizontal,altura_faixa_horizontal,'Iêmen')
+sleep(1)
+turtle.clear()
+
+
+#Bandeira Lituânia - 15
+
+colors = ["yellow","green","red"]
+desenha_bandeira_simples_horizontal(colors,largura_faixa_horizontal,altura_faixa_horizontal,'Lituânia')
+sleep(1)
+turtle.clear()
+
+
+#Bandeira Luxemburgo - 16
+
+colors = ["red","white","blue"]
+desenha_bandeira_simples_horizontal(colors,largura_faixa_horizontal,altura_faixa_horizontal,'Luxemburgo')
+sleep(1)
+turtle.clear()
+
+#Bandeira Serra Leoa - 17
+
+colors = ["green","white","blue"]
+desenha_bandeira_simples_horizontal(colors,largura_faixa_horizontal,altura_faixa_horizontal,'Serra Leoa')
+sleep(1)
+turtle.clear()
+
+#Bandeira Bolivia - 18
+
+colors = ["red","yellow","dark-green"]
+desenha_bandeira_simples_horizontal(colors,largura_faixa_horizontal,altura_faixa_horizontal,'Bolivia')
+sleep(1)
+turtle.clear()
+
+
+#Bandeira Mali - 19
+
+colors = ["green","yellow","red"]
+desenha_bandeira_simples_horizontal(colors,largura_faixa_horizontal,altura_faixa_horizontal,'Mali')
+sleep(1)
+turtle.clear()
+
+#Bandeira Gabão - 20
+
+colors = ["green","yellow","blue"]
+desenha_bandeira_simples_horizontal(colors,largura_faixa_horizontal,altura_faixa_horizontal,'Gabão')
+sleep(1)
+turtle.clear()
+
+
 
 
 
