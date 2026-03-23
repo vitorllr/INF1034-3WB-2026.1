@@ -3,7 +3,7 @@ import math
 from time import sleep
 screen = Screen()
 turtle = Turtle()
-turtle.speed(5)
+turtle.speed(7)
 
 
 colors = ["orange","white","green"]
@@ -145,7 +145,7 @@ turtle.clear()
 #Bandeira Alemanha - 9
 
 colors = ["black","red","gold"]
-desenha_bandeira_simples_horizontal(colors,largura_faixa,altura_faixa,'Alemanha')
+desenha_bandeira_simples_horizontal(colors,largura_faixa_horizontal,altura_faixa_horizontal,'Alemanha')
 sleep(1)
 turtle.clear()
 
