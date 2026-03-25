@@ -6,28 +6,6 @@ import math
 t = Turtle()
 t.speed(7)
 
-def desenhar_quadrado(fill_color: str, lado:int):
-
-    
-
-    rand_x = random.randint(0,int(300-lado))
-    rand_y = random.randint(lado,300)
-
-    t.penup()
-    t.goto(rand_x,rand_y)
-    t.pendown()
-
-    t.fillcolor(fill_color)
-    t.begin_fill()
-
-    for _ in range(4):
-        t.fd(lado)
-        t.rt(90)
-
-    t.end_fill()
-
-    t.hideturtle()
-
 def desenhar_plano_cartesiano():
     # Desenhando um plano cartesiano 
     t.goto(0,0)
@@ -49,6 +27,29 @@ def desenhar_plano_cartesiano():
     #t.penup() # ou pu()
     #t.goto(200,250)
     #t.pendown() # ou pd()
+
+
+def desenhar_quadrado(x, y, fill_color: str, lado:int):
+
+    x = rand_x - lado
+    y = rand_y -lado
+
+    t.penup()
+    t.goto(x,y)
+    t.setheading(0)
+    t.pendown()
+
+    t.fillcolor(fill_color)
+    t.begin_fill()
+
+    for _ in range(4):
+        t.fd(lado)
+        t.rt(90)
+
+    t.end_fill()
+
+    t.hideturtle()
+
 
 def desenhar_triangulo_equilatero(fill_color: str, lado:int):
     altura = lado * math.sqrt(3)/2
@@ -117,7 +118,9 @@ def desenhar_trapezio(fill_color: str, lado_menor:int, lado_maior:int, lado_nao_
 
 desenhar_plano_cartesiano()
 color = textinput("Insira uma cor","Digite a cor desejada no preenchimento: ")
-desenhar_quadrado(color,100)
+rand_x = random.randint(0,int(300))
+rand_y = random.randint(0,int(300))
+desenhar_quadrado(rand_x,rand_y,color,100)
 color = textinput("Insira uma cor","Digite a cor desejada no preenchimento: ")
 desenhar_triangulo_equilatero(color,100)
 color = textinput("Insira uma cor","Digite a cor desejada no preenchimento: ")
