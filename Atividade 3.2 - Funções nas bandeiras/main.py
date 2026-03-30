@@ -1,5 +1,6 @@
 from turtle import *
 from time import sleep
+
 screen = Screen()
 turtle = Turtle()
 turtle.speed(10)
@@ -229,8 +230,8 @@ def desenha_bandeira_gabao():
     sleep(1)
     turtle.clear()
 
-#desenha_bandeira_costa_marfim()
-#desenha_bandeira_franca()
+desenha_bandeira_costa_marfim()
+desenha_bandeira_franca()
 desenha_bandeira_italia()
 desenha_bandeira_irlanda()
 desenha_bandeira_belgica()
@@ -251,13 +252,46 @@ desenha_bandeira_bolivia()
 desenha_bandeira_mali()
 desenha_bandeira_gabao()
 
-#DESAFIO
-def desenha_bandeira_irlanda_por_textinput():
-    input = textinput("Bandeira da Irlanda","Digite a Bandeira da Irlanda")
-    if input == "Irlanda" or "irlanda":
-        desenha_bandeira_irlanda()
-    else:
-        turtle.write("A bandeira inserida não é da Irlanda!", align="center", font=("Arial", 16, "bold"))
+#DESAFIO BANDEIRA POR TEXTINPUT
+bandeiras = {
+    "Costa do Marfim": desenha_bandeira_costa_marfim,
+    "França": desenha_bandeira_franca,
+    "Itália": desenha_bandeira_italia,
+    "Irlanda": desenha_bandeira_irlanda,
+    "Bélgica": desenha_bandeira_belgica,
+    "Peru": desenha_bandeira_peru,
+    "Nigéria": desenha_bandeira_nigeria,
+    "Romênia": desenha_bandeira_romenia,
+    "Alemanha": desenha_bandeira_alemanha,
+    "Rússia": desenha_bandeira_russia,
+    "Países Baixos": desenha_bandeira_paises_baixos,
+    "Bulgária": desenha_bandeira_bulgaria,
+    "Estônia": desenha_bandeira_estonia,
+    "Hungria": desenha_bandeira_hungria,
+    "Iêmen": desenha_bandeira_iemen,
+    "Lituânia": desenha_bandeira_lituania,
+    "Luxemburgo": desenha_bandeira_luxemburgo,
+    "Serra Leoa": desenha_bandeira_serra_leoa,
+    "Bolívia": desenha_bandeira_bolivia,
+    "Mali": desenha_bandeira_mali,
+    "Gabão": desenha_bandeira_gabao
+}
 
-desenha_bandeira_irlanda_por_textinput()
+def desenha_bandeira_por_textinput():
+    input_value = textinput("Bandeira Por Input","Digite o nome de uma bandeira com")
+
+    if input_value in bandeiras:
+        bandeiras[input_value]()
+    else:
+        turtle.hideturtle()
+        turtle.write("A bandeira inserida não está na lista!", align="center", font=("Arial", 16, "bold"))
+        sleep(2)
+        turtle.clear()
+
+numero_de_bandeira = int(textinput("Ola","Quantas Bandeiras quer desenhar?"))
+
+while numero_de_bandeira > 0:
+    desenha_bandeira_por_textinput()
+    numero_de_bandeira -= 1
+
 mainloop()
