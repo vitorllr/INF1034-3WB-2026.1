@@ -6,6 +6,7 @@ import math
 t = Turtle()
 t.speed(0)
 
+
 def soma_2(x):
     return x + 2
 
@@ -20,6 +21,9 @@ def elevado_x(x):
 
 def calcula_5_menos_x2(x):
     return (5 - x ** 2)
+
+def calcula_x2_menos_5x_mais_6(x):
+    return (x ** 2) - (5*x) + 6
 
 def desenha_soma_2():
     for i in range(-99,101):
@@ -76,10 +80,18 @@ def desenha_2_elevado_x():
 def desenha_5_menos_x2():
     t.color("purple")
     for i in range(-199, 201):
-        t.goto(i, calcula_5_menos_x2(i/50) * 10)
+        t.goto(i, calcula_5_menos_x2(i/50) * 30)
         t.pd()
+    sleep(1)
+
+def desenha_x2_menos_5x_mais_6():
+    t.color("yellow")
+    for i in range(-199, 201):
+        t.goto((i/50) * 10 , calcula_x2_menos_5x_mais_6(i/50) * 10)
+        t.pd()
+    sleep(1)
+
  
-sleep(1)
 
 # Bloco Principal
 
@@ -121,10 +133,19 @@ sleep(1)
 # t.clear()
 
 # 5 - x^2
+# desenha_plano_cartesiano()
+# t.pu()
+# t.goto(0,0)
+# desenha_5_menos_x2()
+# t.clear()
+
+
+
+#  x^2 - 5x + 6
 desenha_plano_cartesiano()
 t.pu()
 t.goto(0,0)
-desenha_5_menos_x2()
+desenha_x2_menos_5x_mais_6()
 t.clear()
 
 mainloop()
