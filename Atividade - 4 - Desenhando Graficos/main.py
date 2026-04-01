@@ -1,6 +1,7 @@
 from turtle import *
 from time import sleep
 import math
+import random
 
 
 t = Turtle()
@@ -11,7 +12,7 @@ def soma_2(x):
     return x + 2
 
 def raiz_2(x):
-    return x ** 1/2
+    return x ** (1/2)
 
 def inverso_x(x):
     return 1/x
@@ -173,11 +174,53 @@ def desenha_x3_menos_x2_menos_x():
 
 #x^3 - x^2 - x + 1
 
-desenha_plano_cartesiano()
-t.pu()
-t.goto(0,0)
-desenha_x3_menos_x2_menos_x()
-t.clear()
+# desenha_plano_cartesiano()
+# t.pu()
+# t.goto(0,0)
+# desenha_x3_menos_x2_menos_x()
+# t.clear()
+
+#DESAFIO
+
+lista_de_funcoes = [raiz_2, inverso_x, elevado_x,
+                    calcula_5_menos_x2, calcula_x2_menos_5x_mais_6,calcula_x3_menos_x2_menos_x]
+
+def corrida_de_tartarugas(n):
+
+    #Desenhar linha de chegada
+    t.pu()
+    t.goto(280,0)
+    t.pd()
+    t.goto(280,90)
+    t.pu()
+    t.goto(280,90)
+    t.rt(90)
+    t.write("FINISH", align="center", font=("Arial", 16, "bold"))
+    t.hideturtle()
+    
+    lista_corredoras = []
+    combo_funcao_tartaruga = {}
+
+    for i in range(n):
+        corredora = Turtle()
+        corredora.speed(2)
+        lista_corredoras.append(corredora)
+        corredora.shape("turtle")
+        corredora.color(random.choice(["red", "blue", "green","yellow","orange"]))
+        
+        funcao_escolhida = random.choice(lista_de_funcoes)
+        combo_funcao_tartaruga[corredora] = funcao_escolhida
+
+    
+    for x in range(1, 302):
+        for corredora in lista_corredoras:
+            f = combo_funcao_tartaruga[corredora]
+            valor_gerado = f(x) 
+            corredora.goto(x, valor_gerado)
+
+
+    
+corrida_de_tartarugas(2)
 
 mainloop()
 
