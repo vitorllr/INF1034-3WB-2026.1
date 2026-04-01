@@ -25,6 +25,9 @@ def calcula_5_menos_x2(x):
 def calcula_x2_menos_5x_mais_6(x):
     return (x ** 2) - (5*x) + 6
 
+def calcula_x3_menos_x2_menos_x(x):
+    return (x ** 3) - (x ** 2) - x + 1
+
 def desenha_soma_2():
     for i in range(-99,101):
         # t.pu()
@@ -34,6 +37,8 @@ def desenha_soma_2():
     sleep(1)
 
 def desenha_plano_cartesiano():
+    t.pensize(1)
+
     t.color("black")
     # Eixo dos X
     t.pu()
@@ -59,6 +64,8 @@ def desenha_raiz_2():
     sleep(1)
 
 def desenha_inverso_de_x():
+    t.pensize(6)
+
     t.color("green")
 
     for i in range(-199, -1):
@@ -70,6 +77,8 @@ def desenha_inverso_de_x():
     sleep(1)
 
 def desenha_2_elevado_x():
+    t.pensize(6)
+
     t.color("orange")
     for i in range(-199, 201):
         t.goto(i, elevado_x(i/50) * 10)
@@ -78,6 +87,8 @@ def desenha_2_elevado_x():
     sleep(1)
 
 def desenha_5_menos_x2():
+    t.pensize(6)
+
     t.color("purple")
     for i in range(-199, 201):
         t.goto(i, calcula_5_menos_x2(i/50) * 30)
@@ -85,13 +96,22 @@ def desenha_5_menos_x2():
     sleep(1)
 
 def desenha_x2_menos_5x_mais_6():
-    t.color("yellow")
-    for i in range(-199, 201):
+    t.pensize(6)
+
+    t.color("brown")
+    for i in range(-199, 400):
         t.goto((i/50) * 10 , calcula_x2_menos_5x_mais_6(i/50) * 10)
         t.pd()
-    sleep(1)
+    sleep(2)
 
- 
+def desenha_x3_menos_x2_menos_x():
+    t.pensize(6)
+
+    t.color("grey")
+    for i in range(-199, 201):
+        t.goto((i/50) * 10 , calcula_x3_menos_x2_menos_x(i/50) * 10)
+        t.pd()
+    sleep(2)
 
 # Bloco Principal
 
@@ -107,6 +127,7 @@ def desenha_x2_menos_5x_mais_6():
 # t.clear()
    
 # Raiz de X
+
 # desenha_plano_cartesiano()
 # t.pu()
 # t.goto(0,0)
@@ -126,6 +147,7 @@ def desenha_x2_menos_5x_mais_6():
 # t.clear()
 
 # 2^x
+
 # desenha_plano_cartesiano()
 # t.pu()
 # t.goto(0,0)
@@ -133,19 +155,28 @@ def desenha_x2_menos_5x_mais_6():
 # t.clear()
 
 # 5 - x^2
+
 # desenha_plano_cartesiano()
 # t.pu()
 # t.goto(0,0)
 # desenha_5_menos_x2()
 # t.clear()
 
-
-
 #  x^2 - 5x + 6
+
+# desenha_plano_cartesiano()
+# t.pu()
+# t.goto(0,0)
+# desenha_x2_menos_5x_mais_6()
+# t.clear()
+#  x^2 - 5x + 6
+
+#x^3 - x^2 - x + 1
+
 desenha_plano_cartesiano()
 t.pu()
 t.goto(0,0)
-desenha_x2_menos_5x_mais_6()
+desenha_x3_menos_x2_menos_x()
 t.clear()
 
 mainloop()
