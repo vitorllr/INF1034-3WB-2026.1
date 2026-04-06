@@ -33,11 +33,19 @@ draw.line(window, (255,0,255), (100,100), (200,200), 6)
 
 # insercao de recursos 
 
-    # Carregar a imagem no programa
+    # Carregar a imagem no programa e diminuir proporcionalmente
 batman_img = image.load("batman.png")
+batman_img = transform.scale(batman_img, (200,200))
 
-    # Imprimir na tela
+    # Imprimir na tela a imagem
 window.blit(batman_img,(0,0))
+
+# carregando font 
+batman_font = font.Font("batmfa__.ttf",50) 
+
+#desenhar texto 
+batman_text = batman_font.render("I am Batman", True, (0,0,0))
+window.blit(batman_text)
 
 while running:
     for ev in event.get():
