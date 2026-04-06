@@ -3,7 +3,7 @@ from pygame.locals import QUIT
 import sys 
 
 
-# Estrutura inicial do pygame, montagem da tela inicial
+# Estrutura inicial do pygame, montagem da tela inicial + loop depois das Fs
 
 init()
 
@@ -25,6 +25,19 @@ def desenha_arvore():
 def desenha_triangulo():
     draw.polygon(window,(0,255,0), [(200,300), (250,150), (300,300)])
 
+def desenha_casa(lado):
+    draw.rect(window,)
+
+draw.line(window, (255,0,255), (100,100), (200,200), 6)
+# def desenha_poligonos_nao_regulares():
+
+# insercao de recursos 
+
+    # Carregar a imagem no programa
+batman_img = image.load("batman.png")
+
+    # Imprimir na tela
+window.blit(batman_img,(0,0))
 
 while running:
     for ev in event.get():
@@ -34,21 +47,8 @@ while running:
 
     # Desenha-se a partir daqui
 
-    # Desenha chao
-   
     desenha_chao()
     desenha_arvore()
     desenha_triangulo()
+
     display.update()
-
-
-
-
-
-
-
-
-# Desenho da casa
-
-def desenha_casa(lado):
-    draw.rect(window,)
