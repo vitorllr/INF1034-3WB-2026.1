@@ -49,7 +49,7 @@ window.blit(batman_text)
 
 # Inserir som (nao inserir no loop)
 batman_sound = mixer.music.load("batman_1966.mp3")
-mixer.music.play(batman_sound)
+mixer.music.play(-1) #loop ate o fim, sem nada roda uma vez
 
 while running:
     for ev in event.get():
