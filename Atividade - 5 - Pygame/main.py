@@ -45,7 +45,7 @@ batman_font = font.Font("batmfa__.ttf",50)
 
 #desenhar texto 
 batman_text = batman_font.render("I am Batman", True, (0,0,0))
-window.blit(batman_text)
+window.blit(batman_text, (0,0))
 
 # Inserir som (nao inserir no loop)
 batman_sound = mixer.music.load("batman_1966.mp3")
