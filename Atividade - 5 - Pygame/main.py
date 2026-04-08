@@ -64,3 +64,5 @@ while running:
     desenha_triangulo()
 
     display.update()
+
+#apagar comment
