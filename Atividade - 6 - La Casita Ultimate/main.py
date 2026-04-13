@@ -1,6 +1,6 @@
 import pygame
 from pygame import key
-from pygame import K_d,K_a
+from pygame import *
 
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -17,14 +17,23 @@ timer = 0
 
 
 #Definir Variaveis 
-
 pos_x_nuvem = 300
+background_color = "#97D1FA"
+
 
 while running:
     clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            #diferente do key, esse KEYDOWN é uma ação instantanea
+            key_pressed = event.key
+            if key_pressed == K_SPACE and background_color == "#97D1FA":
+                background_color = (255,174,64)
+            elif key_pressed == K_SPACE and background_color == (255,174,64):
+                background_color = "#97D1FA"
+          
 
     ## Update - diferenca de tempo entre um frame e o outro
     keys = key.get_pressed()
@@ -35,16 +44,14 @@ while running:
         pos_x_nuvem = pos_x_nuvem - 100 * dt
     #keys = key.get_pressed()
     dt = clock.get_time()/1000
-    pos_x_nuvem = pos_x_nuvem + 100 * dt
-    if pos_x_nuvem == screen.get_width():
-        pos_x_nuvem =  pos_x_nuvem - 100 * dt
+   
     #dt garante que a mov sera proporcional ao fps que esta rodando
     # Quantos s tenho de diferenca d
     timer = timer + dt
 
 
     ##Draw
-    screen.fill("#97D1FA")
+    screen.fill(background_color)
     pygame.draw.rect(screen, "#0D1664", (100, 200, 200, 50))
     pygame.draw.circle(screen, "#FFF251", (80, 80), 50)
     pygame.draw.polygon(screen, "#F2883B", [(400, 300), (450, 300), (425, 250)])
