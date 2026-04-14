@@ -19,6 +19,15 @@ timer = 0
 #Definir Variaveis 
 pos_x_nuvem = 300
 background_color = "#97D1FA"
+velocidade_nuvem = 400
+
+def movimento_nuvem(pos,vel):
+    if pos + 260 > screen.get_width() :
+        vel = -vel
+    if pos < 50:
+        vel = -vel
+    return pos, vel
+        
 
 
 while running:
@@ -49,6 +58,7 @@ while running:
     # Quantos s tenho de diferenca d
     timer = timer + dt
 
+    pos_x_nuvem += velocidade_nuvem * dt
 
     ##Draw
     screen.fill(background_color)
@@ -63,6 +73,7 @@ while running:
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem+140, 80), 50)
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem+210, 80), 50)
 
+    pos_x_nuvem, velocidade_nuvem = movimento_nuvem(pos_x_nuvem, velocidade_nuvem)        
 
     screen.blit(image, (500, 300))
 

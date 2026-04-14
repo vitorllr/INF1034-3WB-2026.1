@@ -1,0 +1,10 @@
+#!/bin/sh
+'''exec' "/Users/vitorllr/Documents/INF1034-3WB-2026.1/Atividade - 6 - La Casita Ultimate/venv/bin/python3.12" "$0" "$@"
+' '''
+# -*- coding: utf-8 -*-
+import re
+import sys
+from pip._internal.cli.main import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())
