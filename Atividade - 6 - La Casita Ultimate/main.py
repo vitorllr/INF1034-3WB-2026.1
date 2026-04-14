@@ -17,9 +17,14 @@ timer = 0
 
 
 #Definir Variaveis 
+# Nuvem
 pos_x_nuvem = 300
 background_color = "#97D1FA"
 velocidade_nuvem = 400
+
+# Sol
+pos_sol = (300,300)
+# velocidade_sol = pygame.mouse.get_rel()
 
 def movimento_nuvem(pos,vel):
     if pos + 260 > screen.get_width() :
@@ -27,9 +32,9 @@ def movimento_nuvem(pos,vel):
     if pos < 50:
         vel = -vel
     return pos, vel
-        
 
-
+    
+    s
 while running:
     clock.tick(60)
     for event in pygame.event.get():
@@ -45,27 +50,34 @@ while running:
           
 
     ## Update - diferenca de tempo entre um frame e o outro
+    dt = clock.get_time()/1000
     keys = key.get_pressed()
-    #Se eu pressionar a tecla D entao 
+    #Se eu pressionar a tecla D entao
     if keys[K_d]:
         pos_x_nuvem = pos_x_nuvem + 100 * dt
-    elif keys[K_a]: 
+    elif keys[K_a]:
         pos_x_nuvem = pos_x_nuvem - 100 * dt
-    #keys = key.get_pressed()
-    dt = clock.get_time()/1000
-   
+
     #dt garante que a mov sera proporcional ao fps que esta rodando
-    # Quantos s tenho de diferenca d
     timer = timer + dt
 
     pos_x_nuvem += velocidade_nuvem * dt
+    
+    
 
     ##Draw
     screen.fill(background_color)
     pygame.draw.rect(screen, "#0D1664", (100, 200, 200, 50))
-    pygame.draw.circle(screen, "#FFF251", (80, 80), 50)
+    pygame.draw.circle(screen, "#FFF251", (pos_sol), 50)
     pygame.draw.polygon(screen, "#F2883B", [(400, 300), (450, 300), (425, 250)])
-    pygame.draw.line(screen, "#FFF251", (10, 150), (100, 20), 4)
+    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +50, pos_sol[1] + 100), 4)
+    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -50, pos_sol[1] - 100), 4)
+    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +60, pos_sol[1] + 100), 4)
+    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -60, pos_sol[1] - 100), 4)
+    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -120, pos_sol[1] - 120), 4)
+    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +120, pos_sol[1] + 120), 4)
+    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -100, pos_sol[1] - 100), 4)
+    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +100, pos_sol[1] + 100), 4)
 
     
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem, 80), 50)
@@ -73,7 +85,8 @@ while running:
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem+140, 80), 50)
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem+210, 80), 50)
 
-    pos_x_nuvem, velocidade_nuvem = movimento_nuvem(pos_x_nuvem, velocidade_nuvem)        
+    pos_x_nuvem, velocidade_nuvem = movimento_nuvem(pos_x_nuvem, velocidade_nuvem)  
+    pos_sol = (pygame.mouse.get_pos())      
 
     screen.blit(image, (500, 300))
 
@@ -84,4 +97,3 @@ while running:
 
 
 
-#
