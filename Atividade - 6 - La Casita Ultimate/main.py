@@ -27,7 +27,10 @@ velocidade_nuvem = 400
 pos_sol = (300,300)
 comprimento_raio = 100
 angulos_raios = [0, 45, 90, 135, 180, 225, 270, 315]
-# velocidade_sol = pygame.mouse.get_rel()
+estado_sol = "mouse"
+velocidade_sol = 400
+keys = pygame.key.get_pressed()
+
 
 def movimento_nuvem(pos,vel):
     if pos + 260 > screen.get_width() :
@@ -45,6 +48,50 @@ def muda_cor_do_background(pos_sol, background_color):
         background_color = (203,90,11)
     return background_color
 
+def movimento_sol(pos_sol, velocidade_sol, estado_sol, dt, keys):
+    sol_x, sol_y = pos_sol
+    if estado_sol == "mouse":  
+        mouse_x, mouse_y = pygame.mouse.get_pos() 
+        
+        # Trava no eixo X 
+        if mouse_x < 50:
+            sol_x = 50
+        elif mouse_x > screen.get_width() - 50:
+            sol_x = screen.get_width() - 50
+        else:
+            sol_x = mouse_x # Se não estourar o limite, usa a pos do mouse
+            
+         # Trava no eixo Y 
+        if mouse_y < 50:
+            sol_y = 50
+        elif mouse_y > screen.get_height() - 50:
+            sol_y = screen.get_height() - 50
+        else:
+            sol_y = mouse_y # Se não estourar o limite, usa a pos do mouse
+            
+        return (sol_x, sol_y)
+    else:
+        if keys[K_DOWN]:
+            sol_y += velocidade_sol * dt
+        if keys[K_UP]:
+            sol_y -= velocidade_sol * dt
+        if keys[K_RIGHT]:
+            sol_x += velocidade_sol * dt
+        if  keys[K_LEFT]:
+            sol_x -= velocidade_sol * dt 
+        # Trava no eixo X 
+        if sol_x < 50:
+            sol_x = 50
+        elif sol_x > screen.get_width() - 50:
+            sol_x = screen.get_width() - 50
+
+        # Trava no eixo Y 
+        if sol_y < 50:
+            sol_y = 50
+        elif sol_y > screen.get_height() - 50:
+            sol_y = screen.get_height() - 50
+
+        return (sol_x,sol_y)
     
 while running:
     clock.tick(60)
@@ -58,7 +105,10 @@ while running:
                 background_color = (255,174,64)
             elif key_pressed == K_SPACE and background_color == (255,174,64):
                 background_color = "#97D1FA"
-          
+            elif key_pressed == K_DOWN or key_pressed == K_UP or key_pressed == K_RIGHT or key_pressed == K_LEFT:
+                estado_sol = "keyboard"
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            estado_sol = "mouse"
 
     ## Update - diferenca de tempo entre um frame e o outro
     dt = clock.get_time()/1000
@@ -95,8 +145,9 @@ while running:
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem+140, 80), 50)
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem+210, 80), 50)
 
-    pos_x_nuvem, velocidade_nuvem = movimento_nuvem(pos_x_nuvem, velocidade_nuvem)  
-    pos_sol = (pygame.mouse.get_pos())   
+    pos_x_nuvem, velocidade_nuvem = movimento_nuvem(pos_x_nuvem, velocidade_nuvem)
+    pos_sol = movimento_sol(pos_sol, velocidade_sol, estado_sol, dt, keys)
+
     background_color = muda_cor_do_background(pos_sol, background_color)   
 
     screen.blit(image, (500, 300))
