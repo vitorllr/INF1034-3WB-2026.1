@@ -36,8 +36,16 @@ def movimento_nuvem(pos,vel):
         vel = -vel
     return pos, vel
 
+def muda_cor_do_background(pos_sol, background_color):
+    if pos_sol[0] + 50 < screen.get_width()/3:
+        background_color = "#97D1FA"
+    elif pos_sol[0] + 50 > 2*(screen.get_width()/3) :
+        background_color = (40,86,133)
+    else:
+        background_color = (203,90,11)
+    return background_color
+
     
-    s
 while running:
     clock.tick(60)
     for event in pygame.event.get():
@@ -79,23 +87,17 @@ while running:
         dx = math.cos(rad) * comprimento_raio
         dy = math.sin(rad) * comprimento_raio
         pygame.draw.line(screen, "#FFF251", pos_sol, (pos_sol[0] + dx, pos_sol[1] + dy), 4)
-    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +50, pos_sol[1] + 100), 4)
-    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -50, pos_sol[1] - 100), 4)
-    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +100, pos_sol[1] + 200), 4)
-    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -100, pos_sol[1] - 200), 4)
-    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -120, pos_sol[1] - 120), 4)
-    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +120, pos_sol[1] + 120), 4)
-    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -100, pos_sol[1] - 100), 4)
-    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +100, pos_sol[1] + 100), 4)
-
+   
     
+
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem, 80), 50)
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem+70, 80), 50)
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem+140, 80), 50)
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem+210, 80), 50)
 
     pos_x_nuvem, velocidade_nuvem = movimento_nuvem(pos_x_nuvem, velocidade_nuvem)  
-    pos_sol = (pygame.mouse.get_pos())      
+    pos_sol = (pygame.mouse.get_pos())   
+    background_color = muda_cor_do_background(pos_sol, background_color)   
 
     screen.blit(image, (500, 300))
 
