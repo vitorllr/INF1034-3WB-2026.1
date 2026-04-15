@@ -1,6 +1,7 @@
 import pygame
 from pygame import key
 from pygame import *
+import math
 
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -11,7 +12,7 @@ fonte = pygame.font.Font("batmfa__.ttf", 50)
 image = pygame.image.load("batman.png")
 image = pygame.transform.scale(image, (200, 200))
 pygame.mixer.music.load("batman_1966.mp3")
-pygame.mixer.music.play(-1)
+# pygame.mixer.music.play(-1)
 
 timer = 0
 
@@ -24,6 +25,8 @@ velocidade_nuvem = 400
 
 # Sol
 pos_sol = (300,300)
+comprimento_raio = 100
+angulos_raios = [0, 45, 90, 135, 180, 225, 270, 315]
 # velocidade_sol = pygame.mouse.get_rel()
 
 def movimento_nuvem(pos,vel):
@@ -70,14 +73,20 @@ while running:
     pygame.draw.rect(screen, "#0D1664", (100, 200, 200, 50))
     pygame.draw.circle(screen, "#FFF251", (pos_sol), 50)
     pygame.draw.polygon(screen, "#F2883B", [(400, 300), (450, 300), (425, 250)])
-    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +50, pos_sol[1] + 100), 4)
-    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -50, pos_sol[1] - 100), 4)
-    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +60, pos_sol[1] + 100), 4)
-    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -60, pos_sol[1] - 100), 4)
-    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -120, pos_sol[1] - 120), 4)
-    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +120, pos_sol[1] + 120), 4)
-    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -100, pos_sol[1] - 100), 4)
-    pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +100, pos_sol[1] + 100), 4)
+    
+    for grau in angulos_raios:
+        rad = math.radians(grau)
+        dx = math.cos(rad) * comprimento_raio
+        dy = math.sin(rad) * comprimento_raio
+        pygame.draw.line(screen, "#FFF251", pos_sol, (pos_sol[0] + dx, pos_sol[1] + dy), 4)
+    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +50, pos_sol[1] + 100), 4)
+    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -50, pos_sol[1] - 100), 4)
+    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +100, pos_sol[1] + 200), 4)
+    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -100, pos_sol[1] - 200), 4)
+    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -120, pos_sol[1] - 120), 4)
+    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +120, pos_sol[1] + 120), 4)
+    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] -100, pos_sol[1] - 100), 4)
+    # pygame.draw.line(screen, "#FFF251", (pos_sol), (pos_sol[0] +100, pos_sol[1] + 100), 4)
 
     
     pygame.draw.circle(screen, "#FFFFFF", (pos_x_nuvem, 80), 50)
