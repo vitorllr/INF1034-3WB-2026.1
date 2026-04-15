@@ -30,7 +30,12 @@ angulos_raios = [0, 45, 90, 135, 180, 225, 270, 315]
 estado_sol = "mouse"
 velocidade_sol = 400
 keys = pygame.key.get_pressed()
-
+sons = {
+    "manha": "som_manha.mp3",
+    "tarde": "som_tarde.mp3",
+    "noite": "som_noite.mp3"
+}
+estagio_atual = ""
 
 def movimento_nuvem(pos,vel):
     if pos + 260 > screen.get_width() :
@@ -93,6 +98,21 @@ def movimento_sol(pos_sol, velocidade_sol, estado_sol, dt, keys):
 
         return (sol_x,sol_y)
     
+def tocar_estagio_do_dia(pos_sol,estagio_atual):
+    if pos_sol[0] + 50 < screen.get_width()/3:
+       novo_estagio = "manha"
+    elif pos_sol[0] + 50 > 2*(screen.get_width()/3):
+        novo_estagio = "noite"
+    else:
+        novo_estagio = "tarde"
+      # SÓ TROCA A MÚSICA SE O ESTÁGIO MUDOU
+    if novo_estagio != estagio_atual:
+        pygame.mixer.music.load(sons[novo_estagio])
+        pygame.mixer.music.play(-1) # -1 para tocar em loop
+        return novo_estagio # Atualiza o estagio_atual
+    
+    return estagio_atual # Mantém o estágio se não mudou
+
 while running:
     clock.tick(60)
     for event in pygame.event.get():
@@ -147,6 +167,7 @@ while running:
 
     pos_x_nuvem, velocidade_nuvem = movimento_nuvem(pos_x_nuvem, velocidade_nuvem)
     pos_sol = movimento_sol(pos_sol, velocidade_sol, estado_sol, dt, keys)
+    estagio_atual = tocar_estagio_do_dia(pos_sol,estagio_atual)
 
     background_color = muda_cor_do_background(pos_sol, background_color)   
 
