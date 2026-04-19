@@ -66,10 +66,6 @@ def movimento_sol(pos_sol, velocidade_sol, estado_sol, dt, keys):
         sol_y = pygame.math.clamp(sol_y, 50, screen.get_height() - 50)
     return (sol_x, sol_y)
 
-def muda_RGB(pos_sol):
-    pos_sol
-    
-
 def muda_cor_do_background(pos_sol):
     if pos_sol[0] < screen.get_width() // 3:
         return (151, 209, 250)   # dia
