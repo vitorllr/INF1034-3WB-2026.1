@@ -66,6 +66,10 @@ def movimento_sol(pos_sol, velocidade_sol, estado_sol, dt, keys):
         sol_y = pygame.math.clamp(sol_y, 50, screen.get_height() - 50)
     return (sol_x, sol_y)
 
+def muda_RGB(pos_sol):
+    pos_sol
+    
+
 def muda_cor_do_background(pos_sol):
     if pos_sol[0] < screen.get_width() // 3:
         return (151, 209, 250)   # dia
@@ -88,14 +92,15 @@ def tocar_estagio_do_dia(pos_sol, estagio_atual):
     return estagio_atual
 
 
-fonte = pygame.font.Font("batmfa__.ttf", 50)
-image = pygame.image.load("batman.png")
-image = pygame.transform.scale(image, (200, 200))
+
+fonte = pygame.font.Font("gandalf.ttf", 50)
+image = pygame.image.load("gandalf.jpeg")
+image = pygame.transform.scale(image, (150, 150))
 
 sons = {
-    "manha": "som_manha.mp3",
-    "tarde":  "som_tarde.mp3",
-    "noite":  "som_noite.mp3"
+    "manha": "som_manha.wav",
+    "tarde":  "som_tarde.aiff",
+    "noite":  "som_noite.wav"
 }
 
 timer = 0
@@ -112,7 +117,10 @@ angulos_raios = [0, 45, 90, 135, 180, 225, 270, 315]
 estado_sol = "mouse"
 velocidade_sol = 400
 estagio_atual = ""
-background_color = (151, 209, 250)
+
+#Background Desafio
+background_color_inicial = pygame.Color(151, 209, 250)
+background_color_final = pygame.Color(20, 24, 82)
 
 
 while running:
@@ -126,6 +134,7 @@ while running:
                 estado_sol = "keyboard"
         if event.type == pygame.MOUSEBUTTONDOWN:
             estado_sol = "mouse"
+            tocar_estagio_do_dia(pos_sol,estagio_atual)
 
     ## Update
     dt = clock.get_time() / 1000
@@ -142,10 +151,14 @@ while running:
 
     pos_sol = movimento_sol(pos_sol, velocidade_sol, estado_sol, dt, keys)
     background_color = muda_cor_do_background(pos_sol)
-    estagio_atual = tocar_estagio_do_dia(pos_sol, estagio_atual)
+    
+    # estagio_atual = tocar_estagio_do_dia(pos_sol, estagio_atual)
+    
+    fator = pos_sol[0] / screen.get_width()
+    cor_atual = background_color_inicial.lerp(background_color_final, fator)
 
     ##Draw
-    screen.fill(background_color)
+    screen.fill(cor_atual)
     desenha_sol()
     desenha_nuvem(pos_x_nuvem)
     desenha_chao()
@@ -153,8 +166,8 @@ while running:
     desenha_casa()
     desenha_arvore()
 
-    screen.blit(image, (500, 300))
-    steve_text = fonte.render("I am BATMAN!", True, "#000000")
-    screen.blit(steve_text, (500, 250))
+    screen.blit(image, (1100, 300))
+    steve_text = fonte.render("You shall not pass!!", True, "#000000")
+    screen.blit(steve_text, (1000, 200))
 
     pygame.display.update()
