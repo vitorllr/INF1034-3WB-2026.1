@@ -7,10 +7,11 @@ def pedir_letra():
         print("Não podem ser escolhidos valores que nao strings")
         letra = input("Digite a letra da palavra ou a palavra inteira: ")
     return letra
+
 def normaliza_palavra_aleatoria(palavra):
     for i, letra in enumerate(palavra):
         normal = unicodedata.normalize('NFKD', letra)
-        palavra[i] = normal
+        palavra[i] = normal[0]
 
 esportes =[
   "Futebol", "Basquete", "Vôlei", "Natação", "Tênis",
