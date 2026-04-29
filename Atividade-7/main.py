@@ -89,6 +89,7 @@ palavra_aleatoria = esportes[random.randint(0,len(esportes))].lower()
 forca = len(palavra_aleatoria)*["_"]
 letras_tentadas = []
 mensagem = "Adivinhe a palavra!"
+modo = "letra"
 
 running = True
 game_over = False
@@ -102,7 +103,13 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN and not game_over:
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if modo == 'letra':
+                modo = 'palavra'
+            if modo == 'palavra':
+                modo = 'letra' 
+        
+        if event.type == pygame.KEYDOWN and not game_over and modo == 'letra':
             letra = event.unicode.lower()
 
             if letra.isalpha() and len(letra) == 1 and letra not in letras_tentadas:
@@ -124,6 +131,8 @@ while running:
                 elif vidas <= 0:
                     mensagem = f"Que pena! A palavra era: {palavra_aleatoria}"
                     game_over = True
+        else:
+            mensagem = "Digite a palavra inteira"
 
     # 4. Desenhar na Tela (Saída)
     palavra_display = " ".join(forca)
