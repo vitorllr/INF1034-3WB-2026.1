@@ -1,54 +1,3 @@
-# import random 
-
-# def pedir_letra():
-#     letra = input("Digite a letra da palavra ou a palavra inteira: ")
-#     if isinstance(letra, str) == False:
-#         print("Não podem ser escolhidos valores que nao strings")
-#         letra = input("Digite a letra da palavra ou a palavra inteira: ")
-#     return letra
-
-
-# esportes =[
-#   "Futebol", "Basquete", "Volei", "Nataçao", "Tenis",
-#   "Atletismo", "Boxe", "Ciclismo", "Skate", "Surf",
-#   "Ginastica", "Rugby", "Handebol", "Medalha", "Treinador",
-#   "Estadio", "Arbitro", "Campeonato", "Corrida", "Olimpiadas"
-# ]
-
-# vidas = 6
-# tentativas = 0
-# palavra_aleatoria = esportes[random.randint(0,len(esportes))].lower()
-# forca = len(palavra_aleatoria)*["_"]
-
-# print(f"{forca}")
-# print(f"Palavra: {' '.join(forca)}")
-
-# while vidas > 0 and "_" in forca:
-#     palpite = pedir_letra().lower()
-#     tentativas += 1
-
-#     if palpite == palavra_aleatoria:
-#         forca = list(palavra_aleatoria)
-#         break
-
-
-#     if palpite in palavra_aleatoria:
-#         print(f"Boa! A letra '{palpite}' existe na palavra.")
-#         for i, letra in enumerate(palavra_aleatoria):
-#             if letra == palpite:
-#                 forca[i] = palpite
-#         print(f"{forca}")
-#     else:
-#         vidas -= 1
-#         print(f"Errou! Vidas restantes: {vidas}")
-
-
-# if "_" not in forca:
-#     print(f"Parabéns! Você acertou a palavra '{palavra_aleatoria}' em {tentativas} tentativas!")
-# else:
-#     print(f"Que pena! Você perdeu. A palavra era: {palavra_aleatoria}")
-#     print(f"Progresso: {' '.join(forca)}")
-  
 import random 
 import pygame
 from pygame import key
@@ -61,11 +10,6 @@ pygame.display.set_caption("Jogo da Forca")
 fonte = pygame.font.SysFont("Arial", 40)
 fonte_pequena = pygame.font.SysFont("Arial", 30)
 clock = pygame.time.Clock()
-
-def desenha_forca(palavra_aleatoria):
-    tamanho = len(palavra_aleatoria)
-    pygame.draw.line(surface, color, (300,300), (300,330), width=1)
-
 
 
 def pedir_letra():
