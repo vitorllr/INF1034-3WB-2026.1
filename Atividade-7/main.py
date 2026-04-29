@@ -132,7 +132,13 @@ while running:
                     mensagem = f"Que pena! A palavra era: {palavra_aleatoria}"
                     game_over = True
         else:
-            mensagem = "Digite a palavra inteira"
+            letra = input("Digite a palavra inteira: ")
+            
+            if letra == palavra_aleatoria:
+                letras_tentadas.append(letra)
+                tentativas += 1
+                mensagem = f"Parabéns! Venceu em {tentativas} tentativas!"
+                game_over = True
 
     # 4. Desenhar na Tela (Saída)
     palavra_display = " ".join(forca)
