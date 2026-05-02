@@ -12,18 +12,7 @@ fonte = pygame.font.SysFont("Arial", 40)
 fonte_pequena = pygame.font.SysFont("Arial", 30)
 clock = pygame.time.Clock()
 
-def desenha_forca(palavra_aleatoria):
-    tamanho = len(palavra_aleatoria)
-    pygame.draw.line(surface, color, (300,300), (300,330), width=1)
 
-
-
-def pedir_letra():
-    letra = input("Digite a letra da palavra ou a palavra inteira: ")
-    if isinstance(letra, str) == False:
-        print("Não podem ser escolhidos valores que nao strings")
-        letra = input("Digite a letra da palavra ou a palavra inteira: ")
-    return letra
 
 
 esportes =[
