@@ -16,6 +16,17 @@ mensagem = f"escolha a sua opcao: p(pedra), a(papel), t(tesoura)"
 pontos_computador = 0
 pontos_jogador = 0
 
+def compara_opcoes(opcao_maquina,opcao_jogador):
+    if opcao_maquina > opcao_jogador:
+        pontos_computador += 1
+        mensagem = f"deu {opcoes[opcao_maquina]} contra {opcoes[opcao_jogador]}, computador vence"
+    elif opcao_maquina < opcao_jogador:
+        pontos_jogador += 1
+        mensagem = f"deu {opcoes[opcao_maquina]} contra {opcoes[opcao_jogador]}, jogador vence"
+    elif opcao_jogador == opcao_maquina:
+        mensagem = f"deu {opcoes[opcao_maquina]} contra {opcoes[opcao_jogador]}, ninguem vence"
+
+
 while running:
     screen.fill('white')
     for event in pygame.event.get():
@@ -27,7 +38,7 @@ while running:
             opcao_maquina = random.randint(1,3)
             opcao_jogador = event.unicode
             
-            if opcao_jogador != ['p','a','t']:
+            if opcao_jogador not in ['p','a','t']:
                 mensagem = f"Opcao invalida"
                 
             
@@ -38,33 +49,30 @@ while running:
             if opcao_jogador == 't':
                 opcao_jogador = 3
                 
-
-            if opcao_maquina > opcao_jogador:
-                pontos_computador += 1
-                mensagem = f"deu {opcoes[opcao_maquina]} contra {opcoes[opcao_jogador]}, computador vence"
-            elif opcao_maquina < opcao_jogador:
-                pontos_jogador += 1
-                mensagem = f"deu {opcoes[opcao_maquina]} contra {opcoes[opcao_jogador]}, jogador vence"
-            elif opcao_jogador == opcao_maquina:
-                mensagem = f"deu {opcoes[opcao_maquina]} contra {opcoes[opcao_jogador]}, ninguem vence"
-
-                
+            compara_opcoes(opcao_maquina,opcao_jogador)
+            
+            
             if pontos_computador == 3 :
                 mensagem = f"o computador venceu!"
             elif pontos_jogador == 3:
                 mensagem = f"parabens!! Voce venceu!!"
-                
+        
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+            pontos_computador = 0
+            pontos_jogador = 0
+            mensagem = "Escolha: p(pedra), a(papel), t(tesoura)"
+        
 
-        texto_mensagem = fonte_pequena.render(mensagem, True, 'blue')
-        texto_pontuacao_pc = fonte_pequena.render(f"Computador: {pontos_computador}", True, (255, 0, 0))
-        texto_pontuacao_jogador = fonte_pequena.render(f"Jogador: {pontos_jogador}", True, (255, 0, 0))
-        
-        screen.blit(texto_mensagem, (screen.get_width()//2 - texto_mensagem.get_width()//2, 300))
-        screen.blit(texto_pontuacao_pc, (50, 50))
-        screen.blit(texto_pontuacao_jogador, (100, 100))
-        
-        screen.blit  
+    texto_mensagem = fonte_pequena.render(mensagem, True, 'blue')
+    texto_pontuacao_pc = fonte_pequena.render(f"Computador: {pontos_computador}", True, (255, 0, 0))
+    texto_pontuacao_jogador = fonte_pequena.render(f"Jogador: {pontos_jogador}", True, (255, 0, 0))
     
-        pygame.display.update()
+    screen.blit(texto_mensagem, (screen.get_width()//2 - texto_mensagem.get_width()//2, 300))
+    screen.blit(texto_pontuacao_pc, (50, 50))
+    screen.blit(texto_pontuacao_jogador, (100, 100))
+    
+    screen.blit  
+
+    pygame.display.update()
 
 
