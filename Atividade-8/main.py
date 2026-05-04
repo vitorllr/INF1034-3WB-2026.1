@@ -4,16 +4,19 @@ def valida_dominio_email(email):
 
 def possui_maiuscula(palavra):
     for c in palavra:
-        return c.isupper()
+        if c.isupper():
+            return True
     return False
 def possui_minuscula(palavra):
     for c in palavra:
-        return c.islower() 
+        if c.islower():
+            return True
     return False
 
 def possui_numero(palavra):
     for c in palavra:
-        return c.isdigit() 
+        if c.isdigit():
+            return True  
     return False
 
      
@@ -30,4 +33,4 @@ print(f"{possui_maiuscula("abc@1234")}")
 print(f"{possui_minuscula("abc@1234")}")
 print(f"{possui_numero("abc@1234")}")
 
-print(f"{avalia_senha("Senha1234@")}")
+print(f"{avalia_senha("Senha1@aaaa")}")
