@@ -94,7 +94,6 @@ while running:
 
             
 
-    # 4. Desenhar na Tela (Saída)
     palavra_display = " ".join(forca)
     texto_palavra = fonte.render(palavra_display, True, 'black')
     texto_mensagem = fonte_pequena.render(mensagem, True, 'blue')
