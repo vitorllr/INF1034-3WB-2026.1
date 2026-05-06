@@ -35,22 +35,34 @@ def avalia_senha(senha):
 def criptografa_a_senha(senha):
     senha_criptografada = ""
     # pegar letra e converter para decimal ascii
-    for char in senha:
-        if char.isdigit():
-            # copiar logica do maiusculo trocando ref e o ciclo para 10
-            pass
-        elif "A" <= char <= "Z":
-            ref = ord("A")  # 65
-            ascii_char = ord(char)
-            pos_alfabeto = ascii_char - ref
-            pos_cesar = pos_alfabeto + 3
-            pos_cesar = pos_cesar % 26
-            letra_cifrada = chr(ref + pos_cesar)
-            senha_criptografada += letra_cifrada
-        elif "a" <= char <= "z":
-            pass
-        else:
-            senha_criptografada += char
+    if avalia_senha(senha):
+        for char in senha:
+            if char.isdigit():
+                ref = ord("0")  # 65
+                ascii_char = ord(char)
+                pos_alfabeto = ascii_char - ref
+                pos_cesar = pos_alfabeto + 3
+                pos_cesar = pos_cesar % 10
+                letra_cifrada = chr(ref + pos_cesar)
+                senha_criptografada += letra_cifrada
+            elif "A" <= char <= "Z":
+                ref = ord("A")  # 65
+                ascii_char = ord(char)
+                pos_alfabeto = ascii_char - ref
+                pos_cesar = pos_alfabeto + 3
+                pos_cesar = pos_cesar % 26
+                letra_cifrada = chr(ref + pos_cesar)
+                senha_criptografada += letra_cifrada
+            elif "a" <= char <= "z":
+                ref = ord("a")  # 65
+                ascii_char = ord(char)
+                pos_alfabeto = ascii_char - ref
+                pos_cesar = pos_alfabeto + 3
+                pos_cesar = pos_cesar % 26
+                letra_cifrada = chr(ref + pos_cesar)
+                senha_criptografada += letra_cifrada 
+            else:
+                senha_criptografada += char
         return senha_criptografada
 
 
@@ -71,3 +83,4 @@ print(f"{possui_minuscula('abc@1234')}")
 print(f"{possui_numero('abc@1234')}")
 
 print(f"{avalia_senha('Senha1@aaaa')}")
+print(f"{criptografa_a_senha("Senha123@")}")
