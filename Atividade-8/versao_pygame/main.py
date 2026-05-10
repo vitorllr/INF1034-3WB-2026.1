@@ -1,4 +1,3 @@
-
 import pygame
 
 pygame.init()
@@ -16,12 +15,10 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        
+
         if event.type == pygame.KEYDOWN and event.key == pygame.K_COMMA:
             mensagem = "Faça o login"
             chute = []
-
-       
 
     palavra_display = " ".join(forca)
     texto_palavra = fonte.render(palavra_display, True, "black")
@@ -32,6 +29,7 @@ while running:
 
     texto_vidas = fonte_pequena.render(f"Vidas: {vidas}", True, (255, 0, 0))
 
+    # comentario do commit
     screen.blit(
         texto_palavra, (screen.get_width() // 2 - texto_palavra.get_width() // 2, 200)
     )
