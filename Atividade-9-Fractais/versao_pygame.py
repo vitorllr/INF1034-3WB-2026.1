@@ -12,7 +12,8 @@ fonte = pygame.font.SysFont("Arial", 22)
 clock = pygame.time.Clock()
 
 CANVAS_Y = 70
-CANVAS_H = ALTURA - 70 - 140
+PAINEL_H = 170
+CANVAS_H = ALTURA - CANVAS_Y - PAINEL_H
 canvas = pygame.Surface((LARGURA, CANVAS_H))
 
 
@@ -88,13 +89,13 @@ def desenha_slider(surf, sl, ativo):
     cor = (200, 70, 50) if ativo else (40, 90, 180)
     pygame.draw.circle(surf, cor, (hx, sl["y"] + 4), 12)
     txt = fonte.render(f"{sl['rotulo']}: {int(sl['valor'])}", True, (30, 30, 30))
-    surf.blit(txt, (sl["x"], sl["y"] - 28))
+    surf.blit(txt, (sl["x"], sl["y"] - 38))
 
 
 def mouse_no_slider(sl, mx, my):
     return (
         sl["x"] - 8 <= mx <= sl["x"] + sl["w"] + 8
-        and sl["y"] - 12 <= my <= sl["y"] + 18
+        and sl["y"] - 14 <= my <= sl["y"] + 20
     )
 
 
@@ -106,7 +107,7 @@ def atualiza_slider(sl, mx):
 
 sl_sierp_n = {
     "x": 220,
-    "y": ALTURA - 80,
+    "y": ALTURA - 55,
     "w": 700,
     "vmin": 1000,
     "vmax": 40000,
@@ -115,7 +116,7 @@ sl_sierp_n = {
 }
 sl_arv_prof = {
     "x": 220,
-    "y": ALTURA - 100,
+    "y": ALTURA - 55,
     "w": 400,
     "vmin": 1,
     "vmax": 9,
@@ -124,7 +125,7 @@ sl_arv_prof = {
 }
 sl_arv_abert = {
     "x": 700,
-    "y": ALTURA - 100,
+    "y": ALTURA - 55,
     "w": 400,
     "vmin": 5,
     "vmax": 60,
@@ -133,7 +134,7 @@ sl_arv_abert = {
 }
 sl_koch = {
     "x": 220,
-    "y": ALTURA - 80,
+    "y": ALTURA - 55,
     "w": 700,
     "vmin": 0,
     "vmax": 5,
@@ -188,8 +189,9 @@ def preparar():
         )
 
     elif tela == "koch":
+        tamanho_koch = int(min(h * 0.85, w * 0.6) / 1.33)
         coleta_floco(
-            segmentos, w // 2, h // 2 + 30, 460, sl_koch["valor"], (30, 90, 180)
+            segmentos, w // 2, h // 2, tamanho_koch, sl_koch["valor"], (30, 90, 180)
         )
 
 
@@ -295,9 +297,9 @@ while running:
         screen.blit(t, (rx + 90 - t.get_width() // 2, 25))
 
     # painel de sliders
-    pygame.draw.rect(screen, (225, 225, 230), (0, ALTURA - 140, LARGURA, 140))
+    pygame.draw.rect(screen, (225, 225, 230), (0, ALTURA - PAINEL_H, LARGURA, PAINEL_H))
     pygame.draw.line(
-        screen, (180, 180, 180), (0, ALTURA - 140), (LARGURA, ALTURA - 140), 2
+        screen, (180, 180, 180), (0, ALTURA - PAINEL_H), (LARGURA, ALTURA - PAINEL_H), 2
     )
     if desenhando:
         status = "Desenhando..."
@@ -306,7 +308,7 @@ while running:
         status = "Pronto. Arraste os sliders pra alterar o fractal."
         cor_status = (80, 130, 80)
     dica = fonte.render(f"{status}   |   Teclas 1/2/3 trocam fractal", True, cor_status)
-    screen.blit(dica, (20, ALTURA - 132))
+    screen.blit(dica, (20, ALTURA - PAINEL_H + 15))
 
     if tela == "sierpinski":
         desenha_slider(screen, sl_sierp_n, slider_ativo is sl_sierp_n)
