@@ -16,16 +16,13 @@ CANVAS_H = ALTURA - 70 - 140
 canvas = pygame.Surface((LARGURA, CANVAS_H))
 
 
-# ---------- helper de forma geometrica usado pelo Koch ----------
 def desenha_triangulo(surf, p1, p2, p3, cor, espessura):
     pygame.draw.lines(surf, cor, True, [p1, p2, p3], espessura)
 
 
-# ---------- FRACTAL MEDIO: arvore com 3 ramos ----------
-# Variacao em relacao a versao da aula: 3 ramos no lugar de 2,
-# gradiente de cor laranja->amarelo por profundidade e
-# espessura proporcional ao nivel.
-# Os segmentos sao guardados numa lista pra poder animar o desenho.
+#  FRACTAL MEDIO
+
+
 def coleta_arvore(segs, x, y, comprimento, angulo, abertura, profundidade):
     if profundidade == 0 or comprimento < 2:
         return
@@ -44,8 +41,7 @@ def coleta_arvore(segs, x, y, comprimento, angulo, abertura, profundidade):
     coleta_arvore(segs, x2, y2, novo, angulo + abertura, abertura, profundidade - 1)
 
 
-# ---------- FRACTAL DIFICIL: floco de Koch ----------
-# coleta os segmentos de um lado da curva
+#  FRACTAL DIFICIL
 def coleta_koch(segs, p1, p2, nivel, cor):
     if nivel == 0:
         segs.append((p1, p2, cor, 2))
@@ -69,7 +65,6 @@ def coleta_floco(segs, cx, cy, tamanho, nivel, cor):
     p2 = (cx + tamanho / 2, cy + h / 2)
     p3 = (cx - tamanho / 2, cy + h / 2)
     if nivel == 0:
-        # usa o helper da forma geometrica
         desenha_triangulo(canvas, p1, p2, p3, cor, 2)
         segs.append((p1, p2, cor, 2))
         segs.append((p2, p3, cor, 2))
@@ -80,7 +75,7 @@ def coleta_floco(segs, cx, cy, tamanho, nivel, cor):
     coleta_koch(segs, p3, p1, nivel, cor)
 
 
-# ---------- slider (so um dicionario com os campos) ----------
+#  slider
 def desenha_slider(surf, sl, ativo):
     pygame.draw.rect(
         surf, (180, 180, 180), (sl["x"], sl["y"], sl["w"], 8), border_radius=4
@@ -109,7 +104,6 @@ def atualiza_slider(sl, mx):
     sl["valor"] = int(round(sl["vmin"] + prop * (sl["vmax"] - sl["vmin"])))
 
 
-# parametros ajustaveis (1 ou 2 sliders por fractal)
 sl_sierp_n = {
     "x": 220,
     "y": ALTURA - 80,
@@ -155,9 +149,9 @@ FUNDOS = {
 
 # estado da animacao
 tela = "sierpinski"
-segmentos = []  # lista de linhas (arvore/koch)
-pontos_sierp = []  # lista de pontos (sierpinski)
-indice = 0  # quantos ja foram desenhados no canvas
+segmentos = []
+pontos_sierp = []
+indice = 0
 desenhando = False
 slider_ativo = None
 
@@ -173,9 +167,8 @@ def preparar():
     w, h = canvas.get_size()
 
     if tela == "sierpinski":
-        # ===== FRACTAL FACIL: Sierpinski via chaos game =====
-        # Codigo do fractal e inline (sem definir funcao recursiva).
-        # Sao 6 linhas de logica:
+        #  FRACTAL FACIL
+
         alvos = [(w // 2, 40), (60, h - 60), (w - 60, h - 60)]
         x, y = w // 2, h // 2
         for i in range(sl_sierp_n["valor"]):
@@ -207,7 +200,7 @@ def avancar_animacao():
         return
     if tela == "sierpinski":
         total = len(pontos_sierp)
-        # velocidade adaptativa: termina em ~6 segundos a 60fps
+
         quantos = max(1, total // 360)
         fim = min(indice + quantos, total)
         for i in range(indice, fim):
@@ -236,7 +229,7 @@ abas = [
 ]
 
 
-preparar()  # ja deixa o primeiro fractal pronto pra animar
+preparar()
 
 running = True
 while running:
@@ -266,7 +259,6 @@ while running:
                     tela = nome
                     preparar()
                     trocou = True
-            # sliders so respondem com o desenho ja finalizado
             if not trocou and not desenhando:
                 cand = None
                 if tela == "sierpinski" and mouse_no_slider(sl_sierp_n, mx, my):
