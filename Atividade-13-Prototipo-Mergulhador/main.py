@@ -25,6 +25,10 @@
 # aumenta a quantidade. Ao tocar no mergulhador, o tubarao explode e o
 # jogo acaba. Obstaculos: minas submarinas, submarinos e pedras.
 #
+# Este arquivo: PROTOTIPO da atividade 12 com a tematica do mergulhador.
+# Implementa so o que a atividade pede (mapa em tileset, personagem
+# animado, colisao, dict de recortes, mapa via txt e camera).
+# Tubaroes/niveis/game over ficam pra G3.
 
 import math
 import os
@@ -35,7 +39,7 @@ import pygame
 pygame.init()
 LARGURA, ALTURA = 1280, 720
 screen = pygame.display.set_mode((LARGURA, ALTURA))
-pygame.display.set_caption("Atividade 12 - Mapas")
+pygame.display.set_caption("Atividade 13 - Prototipo Mergulhador")
 clock = pygame.time.Clock()
 fonte = pygame.font.SysFont("Arial", 22)
 
@@ -151,6 +155,7 @@ if not os.path.exists(SPRITESHEET_PATH):
 tileset = pygame.image.load(TILESET_PATH).convert_alpha()
 spritesheet = pygame.image.load(SPRITESHEET_PATH).convert_alpha()
 
+# dict pra acessar o corte direto pelo char do mapa (extra: sem varios ifs)
 RECORTES = {
     "w": pygame.Rect(0 * TILE, 0, TILE, TILE),
     "s": pygame.Rect(1 * TILE, 0, TILE, TILE),
