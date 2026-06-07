@@ -1,0 +1,12 @@
+Assets: Underwater Diving Pack
+Author: GameSupplyGuy
+Source: https://opengameart.org/content/underwater-diving-pack
+License: CC0 (Public Domain). Credit is not required but appreciated.
+
+Files used:
+- background.png  (water with light rays, parallax)
+- tiles.png       (rock chunks, mossy ground)
+- props.png       (corals, statues, kelp)
+- mine.png        (spiked mine)
+- fish-big.png    (fish sprite used as "tubarao" - 4 frames)
+- player-swiming.png (diver swim animation - 7 frames)
