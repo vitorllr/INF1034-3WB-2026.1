@@ -275,7 +275,7 @@ def desenha_personagem():
     screen.blit(sprite, (int(personagem["x"]), int(personagem["y"])))
 
 
-def desenha_hud():
+def desenha_dicas():
     titulo = fonte_grande.render("Atividade 11 - Animacoes", True, (30, 30, 30))
     screen.blit(titulo, (20, 18))
 
@@ -323,6 +323,6 @@ while running:
     desenha_chao()
     desenha_personagem()
     desenha_fogos()
-    desenha_hud()
+    desenha_dicas()
 
     pygame.display.update()
