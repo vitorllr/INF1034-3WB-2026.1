@@ -10,17 +10,14 @@ clock = pygame.time.Clock()
 fonte = pygame.font.SysFont("Arial", 22)
 
 TILE = 64
-MAPA_PATH = "mapa.txt"
-ASSETS = "assets"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MAPA_PATH = os.path.join(BASE_DIR, "mapa.txt")
+ASSETS = os.path.join(BASE_DIR, "assets")
+AZUL_MARINHO = (30, 60, 100)
 
 
 def carrega_imagem(nome):
     return pygame.image.load(os.path.join(ASSETS, nome)).convert_alpha()
-
-
-background = carrega_imagem("background.png")
-BG_LARGURA = background.get_width()
-BG_ALTURA = background.get_height()
 
 
 def recorte_escalado(folha, area, tamanho):
@@ -34,7 +31,7 @@ sprite_mina = carrega_imagem("mine.png")
 
 TILES = {
     "w": None,
-    "s": recorte_escalado(folha_tiles, (320, 80, 80, 80), TILE),
+    "s": recorte_escalado(folha_tiles, (0, 80, 80, 80), TILE),
     "r": recorte_escalado(folha_tiles, (0, 0, 80, 80), TILE),
     "c": recorte_escalado(folha_props, (480, 320, 80, 80), TILE),
     "m": pygame.transform.scale(sprite_mina, (TILE, TILE)),
@@ -73,18 +70,11 @@ DESLOCAMENTO_Y = (ALTURA - MAPA_ALTURA) // 2
 
 CHAO = (MAPA_LINHAS - 1) * TILE + DESLOCAMENTO_Y + 20
 DECORACOES = [
-    ("ruina", 1010),
-    ("arco", 470),
-    ("estatua", 250),
-    ("estatua_coral", 712),
-    ("pilar", 44),
-    ("pilar", 952),
-    ("kelp", 156),
-    ("kelp", 856),
-    ("coral", 636),
-    ("coral", 1196),
-    ("anemona", 372),
-    ("anemona", 1108),
+    ("estatua", 230),
+    ("kelp", 430),
+    ("coral", 560),
+    ("arco", 950),
+    ("anemona", 1140),
 ]
 
 
@@ -120,13 +110,7 @@ frame_peixe = 0.0
 
 
 def desenha_background():
-    x = 0
-    while x < LARGURA:
-        y = 0
-        while y < ALTURA:
-            screen.blit(background, (x, y))
-            y += BG_ALTURA
-        x += BG_LARGURA
+    screen.fill(AZUL_MARINHO)
 
 
 def desenha_mapa():
