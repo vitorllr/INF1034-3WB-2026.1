@@ -1,19 +1,20 @@
 import os
+import random
 
 import pygame
 
 pygame.init()
 LARGURA, ALTURA = 1280, 720
 screen = pygame.display.set_mode((LARGURA, ALTURA))
-pygame.display.set_caption("Entrega 2 - Movimentacao e Colliders")
+pygame.display.set_caption("Mergulhador - Endless")
 clock = pygame.time.Clock()
 fonte = pygame.font.SysFont("Arial", 26, bold=True)
 fonte_pequena = pygame.font.SysFont("Arial", 20)
 
 TILE = 64
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MAPA_PATH = os.path.join(BASE_DIR, "mapa.txt")
 ASSETS = os.path.join(BASE_DIR, "assets")
+RECORDE_PATH = os.path.join(BASE_DIR, "recorde.txt")
 AZUL_MARINHO = (30, 60, 100)
 BRANCO = (255, 255, 255)
 
@@ -28,18 +29,18 @@ def recorte_escalado(folha, area, tamanho):
 
 
 folha_tiles = carrega_imagem("tiles.png")
-folha_props = carrega_imagem("props.png")
 sprite_mina = carrega_imagem("mine.png")
 
-TILES = {
-    "w": None,
-    "s": recorte_escalado(folha_tiles, (0, 80, 80, 80), TILE),
-    "r": recorte_escalado(folha_tiles, (0, 0, 80, 80), TILE),
-    "c": recorte_escalado(folha_props, (480, 320, 80, 80), TILE),
-    "m": pygame.transform.scale(sprite_mina, (TILE, TILE)),
-}
+tile_teto = pygame.transform.scale(sprite_mina, (TILE, TILE))
+tile_chao = recorte_escalado(folha_tiles, (0, 80, 80, 80), TILE)
+tile_rocha = recorte_escalado(folha_tiles, (0, 0, 80, 80), TILE)
+OBSTACULOS_SPRITES = [tile_teto, tile_rocha]
 
-SOLIDOS = {"r", "c", "m", "s"}
+TETO = TILE
+CHAO = ALTURA - TILE
+
+
+folha_props = carrega_imagem("props.png")
 
 
 def recorte_prop(area):
@@ -48,42 +49,13 @@ def recorte_prop(area):
     return pygame.transform.scale(pedaco, (largura * TILE // 80, altura * TILE // 80))
 
 
-PROPS = {
-    "arco": recorte_prop((177, 34, 198, 205)),
-    "estatua": recorte_prop((432, 41, 92, 231)),
-    "estatua_coral": recorte_prop((596, 41, 120, 231)),
-    "pilar": recorte_prop((49, 95, 85, 98)),
-    "kelp": recorte_prop((614, 317, 52, 67)),
-    "coral": recorte_prop((514, 327, 48, 56)),
-    "anemona": recorte_prop((434, 332, 46, 51)),
-}
-
-
-def carrega_mapa():
-    with open(MAPA_PATH) as arquivo:
-        return [linha.rstrip("\n") for linha in arquivo if linha.strip()]
-
-
-mapa = carrega_mapa()
-MAPA_COLUNAS = len(mapa[0])
-MAPA_LINHAS = len(mapa)
-MAPA_LARGURA = MAPA_COLUNAS * TILE
-MAPA_ALTURA = MAPA_LINHAS * TILE
-DESLOCAMENTO_Y = (ALTURA - MAPA_ALTURA) // 2
-
-CHAO = (MAPA_LINHAS - 1) * TILE + 20
-DECORACOES = [
-    ("estatua", 240),
-    ("kelp", 520),
-    ("coral", 760),
-    ("arco", 980),
-    ("anemona", 1240),
-    ("pilar", 1500),
-    ("kelp", 1780),
-    ("estatua_coral", 2040),
-    ("coral", 2320),
-    ("anemona", 2560),
-    ("arco", 2820),
+PROPS = [
+    recorte_prop((432, 41, 92, 231)),
+    recorte_prop((177, 34, 198, 205)),
+    recorte_prop((49, 95, 85, 98)),
+    recorte_prop((614, 317, 52, 67)),
+    recorte_prop((514, 327, 48, 56)),
+    recorte_prop((434, 332, 46, 51)),
 ]
 
 
@@ -94,63 +66,117 @@ frames_jogador = []
 for indice in range(NUM_FRAMES_JOGADOR):
     rect_frame = pygame.Rect(indice * 80, 0, 80, 80)
     sprite = folha_jogador.subsurface(rect_frame).copy()
-    sprite = pygame.transform.scale(sprite, (TAMANHO_JOGADOR, TAMANHO_JOGADOR))
-    frames_jogador.append(sprite)
-
-
-VELOCIDADE_HORIZONTAL = 220
-GRAVIDADE = 750
-FORCA_FLAP = -300
-VELOCIDADE_FRAME = 10
-
-jogador = {
-    "x": float(TILE * 2),
-    "y": float(MAPA_ALTURA // 2),
-    "vy": 0.0,
-    "frame": 0.0,
-}
-estado = "jogando"
-
-
-def collider_jogador():
-    return pygame.Rect(
-        int(jogador["x"]) + 8,
-        int(jogador["y"]) + 16,
-        TAMANHO_JOGADOR - 16,
-        TAMANHO_JOGADOR - 28,
+    frames_jogador.append(
+        pygame.transform.scale(sprite, (TAMANHO_JOGADOR, TAMANHO_JOGADOR))
     )
 
 
-def colide_com_mapa():
-    collider = collider_jogador()
-    col_min = max(0, collider.left // TILE - 1)
-    col_max = min(MAPA_COLUNAS - 1, collider.right // TILE + 1)
-    lin_min = max(0, collider.top // TILE - 1)
-    lin_max = min(MAPA_LINHAS - 1, collider.bottom // TILE + 1)
-    for linha in range(lin_min, lin_max + 1):
-        for coluna in range(col_min, col_max + 1):
-            if mapa[linha][coluna] in SOLIDOS:
-                tile_rect = pygame.Rect(coluna * TILE, linha * TILE, TILE, TILE)
-                if collider.colliderect(tile_rect):
-                    return True
-    return False
+folha_tubarao = carrega_imagem("fish-big.png")
+NUM_FRAMES_TUBARAO = 4
+LARGURA_TUBARAO = 96
+ALTURA_TUBARAO = 56
+frames_tubarao = []
+for indice in range(NUM_FRAMES_TUBARAO):
+    rect_frame = pygame.Rect(indice * 54, 0, 54, 49)
+    sprite = folha_tubarao.subsurface(rect_frame).copy()
+    frames_tubarao.append(
+        pygame.transform.scale(sprite, (LARGURA_TUBARAO, ALTURA_TUBARAO))
+    )
+
+
+GRAVIDADE = 750
+FORCA_FLAP = -300
+VELOCIDADE_FRAME = 10
+VELOCIDADE_BASE = 200
+JOGADOR_X = LARGURA // 4
+
+jogador = {"y": float(ALTURA // 2), "vy": 0.0, "frame": 0.0}
+distancia = 0.0
+obstaculos = []
+tubaroes = []
+decoracoes = []
+proximo_obstaculo_x = 0.0
+proximo_tubarao_x = 0.0
+proximo_decoracao_x = 0.0
+estado = "jogando"
+
+
+def carrega_recorde():
+    try:
+        with open(RECORDE_PATH) as arquivo:
+            return int(arquivo.read().strip())
+    except (OSError, ValueError):
+        return 0
+
+
+def salva_recorde(valor):
+    with open(RECORDE_PATH, "w") as arquivo:
+        arquivo.write(str(valor))
+
+
+recorde = carrega_recorde()
+
+
+def reinicia():
+    global distancia, estado
+    global proximo_obstaculo_x, proximo_tubarao_x, proximo_decoracao_x
+    jogador["y"] = float(ALTURA // 2)
+    jogador["vy"] = 0.0
+    jogador["frame"] = 0.0
+    distancia = 0.0
+    obstaculos.clear()
+    tubaroes.clear()
+    decoracoes.clear()
+    proximo_obstaculo_x = LARGURA + 400
+    proximo_tubarao_x = LARGURA + 900
+    proximo_decoracao_x = LARGURA + 200
+    estado = "jogando"
 
 
 def flap():
     jogador["vy"] = FORCA_FLAP
 
 
-def reinicia():
-    global estado
-    jogador["x"] = float(TILE * 2)
-    jogador["y"] = float(MAPA_ALTURA // 2)
-    jogador["vy"] = 0.0
-    jogador["frame"] = 0.0
-    estado = "jogando"
+def velocidade_atual():
+    return VELOCIDADE_BASE + min(distancia / 40, 160)
+
+
+def spawna_obstaculos():
+    global proximo_obstaculo_x
+    while distancia + LARGURA + TILE >= proximo_obstaculo_x:
+        y = random.randint(TETO + 10, CHAO - TILE - 10)
+        obstaculos.append(
+            {
+                "x": proximo_obstaculo_x,
+                "y": float(y),
+                "sprite": random.choice(OBSTACULOS_SPRITES),
+            }
+        )
+        proximo_obstaculo_x += max(220, 460 - distancia / 25)
+
+
+def spawna_tubaroes():
+    global proximo_tubarao_x
+    while distancia + LARGURA + 100 >= proximo_tubarao_x:
+        y = random.randint(TETO + 20, CHAO - ALTURA_TUBARAO - 20)
+        tubaroes.append(
+            {
+                "x": proximo_tubarao_x,
+                "y": float(y),
+                "frame": random.random() * NUM_FRAMES_TUBARAO,
+            }
+        )
+        proximo_tubarao_x += max(550, 1500 - distancia / 10)
+
+
+def spawna_decoracoes():
+    global proximo_decoracao_x
+    while distancia + LARGURA + 100 >= proximo_decoracao_x:
+        decoracoes.append({"x": proximo_decoracao_x, "sprite": random.choice(PROPS)})
+        proximo_decoracao_x += random.randint(320, 720)
 
 
 def atualiza_jogador(delta_tempo):
-    jogador["x"] += VELOCIDADE_HORIZONTAL * delta_tempo
     jogador["vy"] += GRAVIDADE * delta_tempo
     jogador["y"] += jogador["vy"] * delta_tempo
     jogador["frame"] = (
@@ -158,49 +184,116 @@ def atualiza_jogador(delta_tempo):
     ) % NUM_FRAMES_JOGADOR
 
 
-def desenha_mapa(camera_x):
-    col_min = max(0, camera_x // TILE)
-    col_max = min(MAPA_COLUNAS, (camera_x + LARGURA) // TILE + 1)
-    for linha in range(MAPA_LINHAS):
-        for coluna in range(col_min, col_max):
-            sprite_tile = TILES[mapa[linha][coluna]]
-            if sprite_tile is not None:
-                screen.blit(
-                    sprite_tile,
-                    (coluna * TILE - camera_x, linha * TILE + DESLOCAMENTO_Y),
-                )
+def atualiza_tubaroes(delta_tempo):
+    velocidade = 90 + distancia / 60
+    for tubarao in tubaroes:
+        tubarao["x"] -= velocidade * delta_tempo
+        if tubarao["y"] < jogador["y"]:
+            tubarao["y"] += 60 * delta_tempo
+        elif tubarao["y"] > jogador["y"]:
+            tubarao["y"] -= 60 * delta_tempo
+        tubarao["frame"] = (tubarao["frame"] + 6 * delta_tempo) % NUM_FRAMES_TUBARAO
 
 
-def desenha_decoracoes(camera_x):
-    for nome, x in DECORACOES:
-        sprite = PROPS[nome]
+def recicla():
+    obstaculos[:] = [o for o in obstaculos if o["x"] - distancia > -TILE * 2]
+    tubaroes[:] = [t for t in tubaroes if t["x"] - distancia > -LARGURA_TUBARAO * 2]
+    decoracoes[:] = [d for d in decoracoes if d["x"] - distancia > -300]
+
+
+def collider_jogador():
+    return pygame.Rect(
+        JOGADOR_X + 8,
+        int(jogador["y"]) + 16,
+        TAMANHO_JOGADOR - 16,
+        TAMANHO_JOGADOR - 28,
+    )
+
+
+def colide():
+    collider = collider_jogador()
+    if collider.top < TETO or collider.bottom > CHAO:
+        return True
+    for obstaculo in obstaculos:
+        rect = pygame.Rect(
+            int(obstaculo["x"] - distancia) + 7,
+            int(obstaculo["y"]) + 7,
+            TILE - 14,
+            TILE - 14,
+        )
+        if collider.colliderect(rect):
+            return True
+    for tubarao in tubaroes:
+        rect = pygame.Rect(
+            int(tubarao["x"] - distancia) + 10,
+            int(tubarao["y"]) + 10,
+            LARGURA_TUBARAO - 20,
+            ALTURA_TUBARAO - 20,
+        )
+        if collider.colliderect(rect):
+            return True
+    return False
+
+
+def desenha_corredor():
+    x = -int(distancia % TILE)
+    while x < LARGURA:
+        screen.blit(tile_teto, (x, 0))
+        screen.blit(tile_chao, (x, CHAO))
+        x += TILE
+
+
+def desenha_decoracoes():
+    for decoracao in decoracoes:
+        sprite = decoracao["sprite"]
         screen.blit(
-            sprite,
-            (x - camera_x, CHAO - sprite.get_height() + DESLOCAMENTO_Y),
+            sprite, (int(decoracao["x"] - distancia), CHAO - sprite.get_height() + 6)
         )
 
 
-def desenha_jogador(camera_x):
-    sprite = frames_jogador[int(jogador["frame"])]
-    pos = (int(jogador["x"] - camera_x), int(jogador["y"]) + DESLOCAMENTO_Y)
-    screen.blit(sprite, pos)
+def desenha_obstaculos():
+    for obstaculo in obstaculos:
+        screen.blit(
+            obstaculo["sprite"], (int(obstaculo["x"] - distancia), int(obstaculo["y"]))
+        )
 
 
-def desenha_hud():
-    titulo = fonte_pequena.render("Entrega 2 - movimentacao e colliders", True, BRANCO)
-    screen.blit(titulo, (16, 12))
-    dica = fonte_pequena.render("SPACE / W / seta pra cima = nadar", True, BRANCO)
-    screen.blit(dica, (16, 38))
+def desenha_tubaroes():
+    for tubarao in tubaroes:
+        sprite = frames_tubarao[int(tubarao["frame"])]
+        screen.blit(sprite, (int(tubarao["x"] - distancia), int(tubarao["y"])))
 
 
-def desenha_mensagem(texto):
-    superficie = fonte.render(texto, True, BRANCO)
-    rect = superficie.get_rect(center=(LARGURA // 2, ALTURA // 2))
-    fundo = rect.inflate(60, 30)
-    pygame.draw.rect(screen, (0, 0, 0), fundo, border_radius=8)
-    pygame.draw.rect(screen, BRANCO, fundo, 2, border_radius=8)
-    screen.blit(superficie, rect)
+def desenha_jogador():
+    screen.blit(frames_jogador[int(jogador["frame"])], (JOGADOR_X, int(jogador["y"])))
 
+
+def display_pontuacao():
+    metros = int(distancia / TILE)
+    screen.blit(fonte.render(f"{metros} m", True, BRANCO), (16, 12))
+    screen.blit(fonte_pequena.render(f"recorde: {recorde} m", True, BRANCO), (16, 44))
+
+
+def desenha_mensagem():
+    metros = int(distancia / TILE)
+    linhas = [
+        fonte.render(f"voce foi pego! {metros} m", True, BRANCO),
+        fonte_pequena.render(f"recorde: {recorde} m", True, BRANCO),
+        fonte_pequena.render("SPACE pra recomecar", True, BRANCO),
+    ]
+    largura = max(linha.get_width() for linha in linhas) + 60
+    altura = sum(linha.get_height() for linha in linhas) + 48
+    caixa = pygame.Rect(0, 0, largura, altura)
+    caixa.center = (LARGURA // 2, ALTURA // 2)
+    pygame.draw.rect(screen, (0, 0, 0), caixa, border_radius=8)
+    pygame.draw.rect(screen, BRANCO, caixa, 2, border_radius=8)
+    y = caixa.top + 18
+    for linha in linhas:
+        screen.blit(linha, (caixa.centerx - linha.get_width() // 2, y))
+        y += linha.get_height() + 6
+
+
+reinicia()
 
 running = True
 while running:
@@ -217,22 +310,28 @@ while running:
                     reinicia()
 
     if estado == "jogando":
+        distancia += velocidade_atual() * delta_tempo
         atualiza_jogador(delta_tempo)
-        if colide_com_mapa() or jogador["y"] > MAPA_ALTURA:
+        atualiza_tubaroes(delta_tempo)
+        spawna_obstaculos()
+        spawna_tubaroes()
+        spawna_decoracoes()
+        recicla()
+        if colide():
             estado = "morreu"
-        elif jogador["x"] >= MAPA_LARGURA - TAMANHO_JOGADOR:
-            reinicia()
-
-    camera_x = int(jogador["x"] + TAMANHO_JOGADOR // 2 - LARGURA // 2)
-    camera_x = max(0, min(MAPA_LARGURA - LARGURA, camera_x))
+            metros = int(distancia / TILE)
+            if metros > recorde:
+                recorde = metros
+                salva_recorde(recorde)
 
     screen.fill(AZUL_MARINHO)
-    desenha_mapa(camera_x)
-    desenha_decoracoes(camera_x)
-    desenha_jogador(camera_x)
-    desenha_hud()
-
+    desenha_corredor()
+    desenha_decoracoes()
+    desenha_obstaculos()
+    desenha_tubaroes()
+    desenha_jogador()
+    display_pontuacao()
     if estado == "morreu":
-        desenha_mensagem("voce bateu! SPACE pra recomecar")
+        desenha_mensagem()
 
     pygame.display.update()
