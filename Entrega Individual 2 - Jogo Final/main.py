@@ -6,7 +6,7 @@ import pygame
 pygame.init()
 LARGURA, ALTURA = 1280, 720
 screen = pygame.display.set_mode((LARGURA, ALTURA))
-pygame.display.set_caption("Mergulhador - Endless")
+pygame.display.set_caption("Flappy Diver")
 clock = pygame.time.Clock()
 fonte = pygame.font.SysFont("Arial", 26, bold=True)
 fonte_pequena = pygame.font.SysFont("Arial", 20)
