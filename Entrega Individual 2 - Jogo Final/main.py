@@ -187,10 +187,18 @@ def atualiza_tubaroes(delta_tempo):
         tubarao["frame"] = (tubarao["frame"] + 6 * delta_tempo) % NUM_FRAMES_TUBARAO
 
 
+def descarta_fora_da_tela(lista, margem):
+    sobreviventes = []
+    for objeto in lista:
+        if objeto["x"] - distancia > -margem:
+            sobreviventes.append(objeto)
+    lista[:] = sobreviventes
+
+
 def recicla():
-    obstaculos[:] = [o for o in obstaculos if o["x"] - distancia > -TILE * 2]
-    tubaroes[:] = [t for t in tubaroes if t["x"] - distancia > -LARGURA_TUBARAO * 2]
-    decoracoes[:] = [d for d in decoracoes if d["x"] - distancia > -300]
+    descarta_fora_da_tela(obstaculos, TILE * 2)
+    descarta_fora_da_tela(tubaroes, LARGURA_TUBARAO * 2)
+    descarta_fora_da_tela(decoracoes, 300)
 
 
 def collider_jogador():
