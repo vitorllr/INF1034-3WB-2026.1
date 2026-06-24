@@ -31,10 +31,8 @@ def recorte_escalado(folha, area, tamanho):
 folha_tiles = carrega_imagem("tiles.png")
 sprite_mina = carrega_imagem("mine.png")
 
-tile_teto = pygame.transform.scale(sprite_mina, (TILE, TILE))
+tile_mina = pygame.transform.scale(sprite_mina, (TILE, TILE))
 tile_chao = recorte_escalado(folha_tiles, (0, 80, 80, 80), TILE)
-tile_rocha = recorte_escalado(folha_tiles, (0, 0, 80, 80), TILE)
-OBSTACULOS_SPRITES = [tile_teto, tile_rocha]
 
 TETO = TILE
 CHAO = ALTURA - TILE
@@ -145,13 +143,7 @@ def spawna_obstaculos():
     global proximo_obstaculo_x
     while distancia + LARGURA + TILE >= proximo_obstaculo_x:
         y = random.randint(TETO + 10, CHAO - TILE - 10)
-        obstaculos.append(
-            {
-                "x": proximo_obstaculo_x,
-                "y": float(y),
-                "sprite": random.choice(OBSTACULOS_SPRITES),
-            }
-        )
+        obstaculos.append({"x": proximo_obstaculo_x, "y": float(y)})
         proximo_obstaculo_x += max(220, 460 - distancia / 25)
 
 
@@ -232,13 +224,24 @@ def colide():
         )
         if collider.colliderect(rect):
             return True
+    for decoracao in decoracoes:
+        sprite = decoracao["sprite"]
+        altura = sprite.get_height()
+        rect = pygame.Rect(
+            int(decoracao["x"] - distancia) + 8,
+            CHAO - altura + 14,
+            sprite.get_width() - 16,
+            altura - 16,
+        )
+        if collider.colliderect(rect):
+            return True
     return False
 
 
 def desenha_corredor():
     x = -int(distancia % TILE)
     while x < LARGURA:
-        screen.blit(tile_teto, (x, 0))
+        screen.blit(tile_mina, (x, 0))
         screen.blit(tile_chao, (x, CHAO))
         x += TILE
 
@@ -253,9 +256,7 @@ def desenha_decoracoes():
 
 def desenha_obstaculos():
     for obstaculo in obstaculos:
-        screen.blit(
-            obstaculo["sprite"], (int(obstaculo["x"] - distancia), int(obstaculo["y"]))
-        )
+        screen.blit(tile_mina, (int(obstaculo["x"] - distancia), int(obstaculo["y"])))
 
 
 def desenha_tubaroes():
