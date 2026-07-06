@@ -25,11 +25,9 @@ BRANCO = (255, 255, 255)
 
 
 def carrega_fonte_titulo(tamanho):
-    # fonte empacotada em assets/ -> mesmo visual em qualquer PC
     empacotada = os.path.join(ASSETS, "TitanOne-Regular.ttf")
     if os.path.exists(empacotada):
         return pygame.font.Font(empacotada, tamanho)
-    # fallback por seguranca caso o arquivo suma
     alternativa = pygame.font.match_font(
         "titanone,fredokaone,arialroundedmtbold,cooperblack,arialblack,impact,arial"
     )
@@ -390,10 +388,8 @@ def sprite_tubarao_orientado(tubarao):
     dx = JOGADOR_X - (tubarao["x"] - distancia)
     dy = jogador["y"] - tubarao["y"]
     if dx <= 0:
-        # mergulhador a esquerda: sprite olha pra direita, espelha e inclina
         base = pygame.transform.flip(base, True, False)
         return pygame.transform.rotate(base, math.degrees(math.atan2(dy, -dx)))
-    # mergulhador a direita (peixe ja passou): sprite ja olha pra direita
     return pygame.transform.rotate(base, math.degrees(math.atan2(-dy, dx)))
 
 
