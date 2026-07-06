@@ -12,6 +12,7 @@ clock = pygame.time.Clock()
 fonte = pygame.font.SysFont("Arial", 26, bold=True)
 fonte_pequena = pygame.font.SysFont("Arial", 20)
 
+
 TILE = 64
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(BASE_DIR, "assets")
@@ -21,6 +22,23 @@ MAX_LEADERBOARD = 10
 MAX_NOME = 12
 AZUL_MARINHO = (30, 60, 100)
 BRANCO = (255, 255, 255)
+
+
+def carrega_fonte_titulo(tamanho):
+    # fonte empacotada em assets/ -> mesmo visual em qualquer PC
+    empacotada = os.path.join(ASSETS, "TitanOne-Regular.ttf")
+    if os.path.exists(empacotada):
+        return pygame.font.Font(empacotada, tamanho)
+    # fallback por seguranca caso o arquivo suma
+    alternativa = pygame.font.match_font(
+        "titanone,fredokaone,arialroundedmtbold,cooperblack,arialblack,impact,arial"
+    )
+    if alternativa:
+        return pygame.font.Font(alternativa, tamanho)
+    return pygame.font.SysFont("arial", tamanho, bold=True)
+
+
+fonte_titulo = carrega_fonte_titulo(130)
 
 
 def carrega_imagem(nome):
@@ -413,14 +431,14 @@ def desenha_caixa(linhas):
 
 
 def desenha_tela_nome():
+    desenha_titulo(LARGURA // 2, 200)
     cursor = "_" if (pygame.time.get_ticks() // 400) % 2 == 0 else " "
     linhas = [
-        fonte.render("FLAPPY DIVER", True, BRANCO),
         fonte_pequena.render("digite seu nome:", True, BRANCO),
         fonte.render(nome_jogador + cursor, True, BRANCO),
         fonte_pequena.render("ENTER pra comecar", True, BRANCO),
     ]
-    desenha_caixa(linhas)
+    desenha_painel(linhas, ALTURA // 2 + 140)
 
 
 def desenha_mensagem():
@@ -442,8 +460,149 @@ def desenha_mensagem():
     desenha_caixa(linhas)
 
 
-reinicia()
-estado = "nome"
+nadador = {
+    "x": -float(TAMANHO_JOGADOR),
+    "y": float(ALTURA // 2),
+    "fase": 0.0,
+    "frame": 0.0,
+}
+bolhas = []
+
+
+def atualiza_bolhas(delta_tempo):
+    for bolha in bolhas:
+        bolha["y"] -= bolha["vy"] * delta_tempo
+        bolha["x"] += math.sin(bolha["y"] * 0.02) * 0.5
+    bolhas[:] = [bolha for bolha in bolhas if bolha["y"] > TETO - 20]
+    if random.random() < delta_tempo * 3:
+        bolhas.append(
+            {
+                "x": random.uniform(0, LARGURA),
+                "y": float(CHAO + 10),
+                "r": random.randint(3, 8),
+                "vy": random.uniform(40, 90),
+            }
+        )
+
+
+def desenha_bolhas():
+    for bolha in bolhas:
+        raio = bolha["r"]
+        surf = pygame.Surface((raio * 2, raio * 2), pygame.SRCALPHA)
+        pygame.draw.circle(surf, (200, 225, 255, 90), (raio, raio), raio)
+        pygame.draw.circle(surf, (255, 255, 255, 120), (raio, raio), raio, 1)
+        screen.blit(surf, (int(bolha["x"] - raio), int(bolha["y"] - raio)))
+
+
+def atualiza_capa(delta_tempo):
+    global distancia
+    distancia += 120 * delta_tempo
+    nadador["x"] += 130 * delta_tempo
+    if nadador["x"] > LARGURA + TAMANHO_JOGADOR:
+        nadador["x"] = -float(TAMANHO_JOGADOR)
+    nadador["fase"] += delta_tempo
+    nadador["y"] = (
+        ALTURA / 2
+        - TAMANHO_JOGADOR / 2
+        + math.sin(nadador["fase"] * 1.6) * 70
+        + math.sin(nadador["fase"] * 0.6) * 40
+    )
+    nadador["frame"] = (
+        nadador["frame"] + VELOCIDADE_FRAME * delta_tempo
+    ) % NUM_FRAMES_JOGADOR
+    atualiza_bolhas(delta_tempo)
+
+
+def desenha_capa_fundo():
+    desenha_corredor()
+    desenha_bolhas()
+    quadro = frames_jogador[int(nadador["frame"])]
+    screen.blit(quadro, (int(nadador["x"]), int(nadador["y"])))
+
+
+def render_contornado(texto, fonte_usada, cor_fill, cor_contorno, espessura):
+    base = fonte_usada.render(texto, True, cor_fill)
+    contorno = fonte_usada.render(texto, True, cor_contorno)
+    largura, altura = base.get_size()
+    pad = espessura + 2
+    surf = pygame.Surface((largura + pad * 2, altura + pad * 2), pygame.SRCALPHA)
+    for dx in range(-espessura, espessura + 1):
+        for dy in range(-espessura, espessura + 1):
+            if dx * dx + dy * dy <= espessura * espessura:
+                surf.blit(contorno, (pad + dx, pad + dy))
+    surf.blit(base, (pad, pad))
+    return surf
+
+
+def compoe_titulo():
+    fill = (250, 250, 250)
+    contorno = (74, 63, 84)
+    cima = pygame.transform.rotate(
+        render_contornado("FLAPPY", fonte_titulo, fill, contorno, 6), 5
+    )
+    baixo = pygame.transform.rotate(
+        render_contornado("DIVER", fonte_titulo, fill, contorno, 6), -4
+    )
+    offset_x = int(cima.get_width() * 0.30)
+    sobreposicao = int(min(cima.get_height(), baixo.get_height()) * 0.18)
+    largura = max(cima.get_width(), offset_x + baixo.get_width())
+    altura = cima.get_height() + baixo.get_height() - sobreposicao
+    canvas = pygame.Surface((largura, altura), pygame.SRCALPHA)
+    canvas.blit(cima, (0, 0))
+    canvas.blit(baixo, (offset_x, cima.get_height() - sobreposicao))
+    return canvas
+
+
+titulo_surf = compoe_titulo()
+titulo_sombra = titulo_surf.copy()
+titulo_sombra.fill((15, 12, 20, 130), special_flags=pygame.BLEND_RGBA_MULT)
+
+
+def desenha_titulo(cx, cy):
+    bob = math.sin(pygame.time.get_ticks() / 500) * 8
+    rect = titulo_surf.get_rect(center=(cx, int(cy + bob)))
+    screen.blit(titulo_sombra, (rect.x + 8, rect.y + 10))
+    screen.blit(titulo_surf, rect)
+
+
+def desenha_texto_central(superficie, cx, y):
+    sombra = superficie.copy()
+    sombra.fill((0, 0, 0, 180), special_flags=pygame.BLEND_RGBA_MULT)
+    screen.blit(sombra, (cx - superficie.get_width() // 2 + 2, y + 2))
+    screen.blit(superficie, (cx - superficie.get_width() // 2, y))
+
+
+def desenha_painel(linhas, centro_y):
+    largura = max(linha.get_width() for linha in linhas) + 60
+    altura = sum(linha.get_height() for linha in linhas) + 48
+    caixa = pygame.Rect(0, 0, largura, altura)
+    caixa.center = (LARGURA // 2, centro_y)
+    fundo = pygame.Surface((largura, altura), pygame.SRCALPHA)
+    fundo.fill((10, 25, 45, 190))
+    screen.blit(fundo, caixa.topleft)
+    pygame.draw.rect(screen, BRANCO, caixa, 2, border_radius=10)
+    y = caixa.top + 18
+    for linha in linhas:
+        screen.blit(linha, (caixa.centerx - linha.get_width() // 2, y))
+        y += linha.get_height() + 6
+
+
+def desenha_tela_capa():
+    desenha_titulo(LARGURA // 2, ALTURA // 2 - 30)
+    if (pygame.time.get_ticks() // 500) % 2 == 0:
+        desenha_texto_central(
+            fonte.render("aperte ESPACO para jogar", True, BRANCO),
+            LARGURA // 2,
+            ALTURA - 170,
+        )
+    desenha_texto_central(
+        fonte_pequena.render(f"recorde: {recorde} m", True, BRANCO),
+        LARGURA // 2,
+        ALTURA - 120,
+    )
+
+
+estado = "capa"
 
 running = True
 while running:
@@ -452,8 +611,14 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if estado == "capa":
+                estado = "nome"
         elif event.type == pygame.KEYDOWN:
-            if estado == "nome":
+            if estado == "capa":
+                if event.key in (pygame.K_SPACE, pygame.K_RETURN):
+                    estado = "nome"
+            elif estado == "nome":
                 if event.key == pygame.K_RETURN and nome_jogador.strip():
                     reinicia()
                 elif event.key == pygame.K_BACKSPACE:
@@ -473,7 +638,9 @@ while running:
                 elif event.key == pygame.K_RETURN:
                     estado = "nome"
 
-    if estado == "jogando":
+    if estado in ("capa", "nome"):
+        atualiza_capa(delta_tempo)
+    elif estado == "jogando":
         distancia += velocidade_atual() * delta_tempo
         atualiza_jogador(delta_tempo)
         atualiza_tubaroes(delta_tempo)
@@ -496,14 +663,19 @@ while running:
     atualiza_explosoes(delta_tempo)
 
     screen.fill(AZUL_MARINHO)
-    desenha_corredor()
-    desenha_decoracoes()
-    desenha_obstaculos()
-    desenha_tubaroes()
-    desenha_jogador()
-    desenha_explosoes()
-    display_pontuacao()
-    if estado == "nome":
+    if estado in ("capa", "nome"):
+        desenha_capa_fundo()
+    else:
+        desenha_corredor()
+        desenha_decoracoes()
+        desenha_obstaculos()
+        desenha_tubaroes()
+        desenha_jogador()
+        desenha_explosoes()
+        display_pontuacao()
+    if estado == "capa":
+        desenha_tela_capa()
+    elif estado == "nome":
         desenha_tela_nome()
     elif estado == "morreu":
         desenha_mensagem()
